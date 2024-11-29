@@ -21,7 +21,7 @@ public class UserService {
     }
 
     // lấy người dùng
-    public List<User> getAllUser() {
+    public List<User> getAllUsers() {
         return this.userRepository.findAll();
     }
 }
