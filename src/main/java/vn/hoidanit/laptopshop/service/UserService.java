@@ -24,4 +24,9 @@ public class UserService {
     public List<User> getAllUsers() {
         return this.userRepository.findAll();
     }
+
+    // lấy người dùng bằng id
+    public User getUserById(long id) {
+        return this.userRepository.findById(id);
+    }
 }

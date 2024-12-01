@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -44,13 +45,28 @@ public class UserController {
         return "admin/user/tableuser";
     }
 
+    @RequestMapping("/admin/user/view/{id}") // lấy bằng hoidanit hoặc id do mình đặt tùy ý
+    public String getUserDetailPage(Model model, @PathVariable long id) { // PathVarible <kiểu dữ liệu > tên biến
+        User users = this.userService.getUserById(id);
+        model.addAttribute("user", users); // truyền sang view
+        model.addAttribute("id", id); // truyền sang view
+        return "admin/user/show";
+    }
+
     // Tạo người dùng
     @RequestMapping("/admin/user/create")
     public String getCreateUserPage(Model model) {
-        User user = new User();
-        model.addAttribute("newUser", user);
-        System.out.println("Run here ");
+        model.addAttribute("newUser", new User());
         return "admin/user/create";
+    }
+
+    // sửa người dùng
+    @RequestMapping("/admin/user/update/{id}")
+    public String getUpdateUserPage(Model model, @PathVariable long id) {
+        User user = this.userService.getUserById(id);
+        model.addAttribute("newUser", user);
+        model.addAttribute("id", user);
+        return "admin/user/update";
     }
 
     // Tạo người dùng thêm vào csdl
@@ -61,7 +77,13 @@ public class UserController {
         // lưu vào sql
         this.userService.saveUser(phuccoder);
         return "redirect:/admin/user"; // redirect là chuyển hướng sang url admin/user để trả về trang
-                                       // admin/user/tableuser
     }
 
+    @RequestMapping(value = "/admin/user/update", method = RequestMethod.POST)
+    public String updateUser(@ModelAttribute("newUser") User phuccoder) {
+        System.out.println("You have successfully added a user " + phuccoder);
+        // lưu vào sql
+        this.userService.saveUser(phuccoder);
+        return "redirect:/admin/user"; // redirect là chuyển hướng sang url admin/user để trả về trang
+    }
 }

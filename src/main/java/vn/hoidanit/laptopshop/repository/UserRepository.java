@@ -11,5 +11,9 @@ import vn.hoidanit.laptopshop.domain.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     // Lưu người dùng để truyền vào repository
 
-    List<User> findByEmail(String email);
+    public List<User> findByEmail(String email);
+
+    // public List<User> findById(long id);
+
+    public User findById(long id);
 }
