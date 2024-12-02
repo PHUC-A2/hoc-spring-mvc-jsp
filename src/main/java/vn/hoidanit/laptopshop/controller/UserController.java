@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -36,6 +38,7 @@ public class UserController {
         return "hello";
     }
 
+    // lấy danh sách user
     @RequestMapping("/admin/user")
     public String getUserPage(Model model) {
         List<User> users = this.userService.getAllUsers();
@@ -45,6 +48,7 @@ public class UserController {
         return "admin/user/tableuser";
     }
 
+    // lấy user bằng id
     @RequestMapping("/admin/user/view/{id}") // lấy bằng hoidanit hoặc id do mình đặt tùy ý
     public String getUserDetailPage(Model model, @PathVariable long id) { // PathVarible <kiểu dữ liệu > tên biến
         User users = this.userService.getUserById(id);
@@ -60,9 +64,16 @@ public class UserController {
         return "admin/user/create";
     }
 
+    // Tạo người dùng
+    @RequestMapping("/admin/user/update")
+    public String getUpdateUserPage(Model model) {
+        model.addAttribute("newUser", new User());
+        return "admin/user/update";
+    }
+
     // sửa người dùng
     @RequestMapping("/admin/user/update/{id}")
-    public String getUpdateUserPage(Model model, @PathVariable long id) {
+    public String getUpdateUserDetailUserPage(Model model, @PathVariable long id) {
         User user = this.userService.getUserById(id);
         model.addAttribute("newUser", user);
         model.addAttribute("id", user);
@@ -79,11 +90,46 @@ public class UserController {
         return "redirect:/admin/user"; // redirect là chuyển hướng sang url admin/user để trả về trang
     }
 
-    @RequestMapping(value = "/admin/user/update", method = RequestMethod.POST)
-    public String updateUser(@ModelAttribute("newUser") User phuccoder) {
-        System.out.println("You have successfully added a user " + phuccoder);
-        // lưu vào sql
-        this.userService.saveUser(phuccoder);
+    @PostMapping("/admin/user/update") // giống RequestMapping
+    public String updateUser(Model model, @ModelAttribute("newUser") User phuccoder) { // phuccoder là request
+
+        User user = this.userService.getUserById(phuccoder.getId());
+        if (user != null) {
+            user.setPhone(phuccoder.getPhone());
+            user.setFullName(phuccoder.getFullName());
+            user.setAddress(phuccoder.getAddress());
+
+            this.userService.saveUser(user);
+        }
         return "redirect:/admin/user"; // redirect là chuyển hướng sang url admin/user để trả về trang
+    }
+
+    // // delete
+    // @GetMapping("/admin/user/delete")
+    // public String getDeletePage1() {
+    // return "admin/user/delete";
+    // }
+
+    @GetMapping("/admin/user/delete/{id}")
+    public String getDeletePage(Model model, @PathVariable long id) {
+        model.addAttribute("id", id);
+
+        /*
+         * Cách 1
+         * User user = new User();
+         * user.setId(id);
+         * model.addAttribute("newUser", user);
+         */
+        // cách 2 dùng value=${id} bên view để lấy id
+        model.addAttribute("newUser", new User());
+
+        return "admin/user/delete";
+    }
+
+    @PostMapping("/admin/user/delete")
+    public String postDeleteUserPage(Model model, @ModelAttribute("newUser") User eric) {
+        this.userService.deleteUserById(eric.getId());
+
+        return "redirect:/admin/user";
     }
 }

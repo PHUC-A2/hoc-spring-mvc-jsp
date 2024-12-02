@@ -7,7 +7,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Update ${id}</title>
+    <title>Update ${newUser.id}</title>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
@@ -30,19 +30,26 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
       <div class="row">
         <div class="col-md-12 col-12 mx-auto">
           <form:form
-            action="/admin/user/create"
+            action="/admin/user/update"
             method="post"
             modelAttribute="newUser"
           >
             <h3>Update a user</h3>
             <hr />
-            <div class="mb-3">
+            <div class="mb-3" style="display: none">
+              <!-- style="display: none" ẩn id -->
               <label class="form-label">Id:</label>
               <form:input type="Number" class="form-control" path="id" />
             </div>
             <div class="mb-3">
               <label class="form-label">Email:</label>
-              <form:input type="email" class="form-control" path="email" />
+              <form:input
+                type="email"
+                class="form-control"
+                path="email"
+                disabled="true"
+              />
+              <!-- disabled="true" không cho đổi email -->
             </div>
             <div class="mb-3">
               <label class="form-label">Phone Number:</label>
@@ -57,6 +64,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
               <form:input type="text" class="form-control" path="address" />
             </div>
             <button type="submit" class="btn btn-warning">Update</button>
+            <a href="/admin/user" class="btn btn-success">Back</a>
           </form:form>
         </div>
       </div>

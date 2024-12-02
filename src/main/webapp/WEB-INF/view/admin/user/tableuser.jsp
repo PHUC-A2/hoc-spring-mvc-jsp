@@ -65,9 +65,13 @@ uri="http://java.sun.com/jsp/jstl/core" %>
                       >
                         Update
                       </a>
-                      <button type="submit" class="btn btn-danger">
+                      <a
+                        href="/admin/user/delete/${user.id}"
+                        type="submit"
+                        class="btn btn-danger"
+                      >
                         Delete
-                      </button>
+                      </a>
                     </td>
                   </tr>
                 </c:forEach>
